@@ -1,0 +1,16 @@
+.fav__button {
+  border-radius: 24px;
+  padding: 5px 12px;
+
+  &__container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__text {
+    font-size: 14px;
+    font-weight: 500;
+  }
+}

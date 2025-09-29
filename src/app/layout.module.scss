@@ -1,0 +1,19 @@
+@use '@/styles' as *;
+
+.body {
+  background-color: $bg;
+  min-height: $vh-94;
+}
+
+.error {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: $vh-70;
+  align-items: center;
+
+  p {
+    width: 50%;
+    text-align: center;
+  }
+}

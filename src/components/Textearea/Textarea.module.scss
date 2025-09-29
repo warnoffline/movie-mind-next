@@ -1,0 +1,39 @@
+@use '@/styles' as *;
+
+.textarea {
+  &-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  &-icon {
+    position: absolute;
+    right: 12px;
+    top: 55%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  &-field {
+    min-width: 350px;
+    width: 100%;
+    min-height: 100px;
+    border: 1px solid $bg;
+    border-radius: 24px;
+    background-color: $bg;
+    padding: 15px;
+    color: $text-primary;
+    font-size: 16px;
+    resize: none;
+
+    &:focus {
+      outline: none;
+      border-color: $bg-accent;
+    }
+
+    &:disabled {
+      background-color: $bg;
+    }
+  }
+}

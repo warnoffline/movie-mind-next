@@ -1,0 +1,33 @@
+$vh: 100vh;
+
+@supports (height: 100dvh) {
+  $vh: 100dvh;
+}
+
+$vh-100: $vh;
+$vh-94: $vh * 0.94;
+$vh-70: $vh * 0.7;
+$vh-60: $vh * 0.6;
+$vh-40: $vh * 0.4;
+$vh-6: $vh * 0.06;
+
+$breakpoint-mobile: 480px;
+$breakpoint-tablet: 768px;
+$breakpoint-desktop: 1024px;
+$breakpoint-lg: 1440px;
+
+@mixin respond($breakpoint) {
+  @if $breakpoint == 'mobile' {
+    @media (max-width: $breakpoint-mobile) {
+      @content;
+    }
+  } @else if $breakpoint == 'tablet' {
+    @media (max-width: $breakpoint-tablet) {
+      @content;
+    }
+  } @else if $breakpoint == 'desktop' {
+    @media (max-width: $breakpoint-desktop) {
+      @content;
+    }
+  }
+}

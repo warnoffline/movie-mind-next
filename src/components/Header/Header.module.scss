@@ -1,0 +1,86 @@
+@use '@/styles' as *;
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  height: $vh-6;
+  background-color: $bg-header;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
+  .logo a {
+    text-decoration: none;
+  }
+
+  &__nav {
+    display: flex;
+    gap: 20px;
+
+    a {
+      text-decoration: none;
+      color: $text-accent;
+      font-weight: 500;
+    }
+
+    .activeLink {
+      color: $text-primary;
+      text-decoration: underline;
+    }
+  }
+
+  &__find {
+    position: relative;
+  }
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+
+  @include respond(tablet) {
+    display: none;
+    gap: 10px;
+  }
+
+  @include respond(mobile) {
+    display: none;
+    gap: 20px;
+  }
+
+  &.open {
+    display: flex;
+    flex-direction: column-reverse;
+    position: absolute;
+    top: calc($vh-6 - 5px);
+    z-index: 100;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background: $bg-header;
+    padding: 10px 0;
+
+    box-shadow: 0px 1px 1px 0px black;
+  }
+}
+
+.burger {
+  display: none;
+
+  button {
+    line-height: 0;
+    border-radius: 50%;
+    padding: 6px;
+  }
+
+  @include respond(tablet) {
+    display: block;
+  }
+
+  @include respond(mobile) {
+    display: block;
+  }
+}

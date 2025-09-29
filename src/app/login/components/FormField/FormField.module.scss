@@ -1,0 +1,14 @@
+@use '@/styles' as *;
+
+.auth__input {
+  input {
+    padding: 14px 20px;
+    font-size: 18px;
+    min-width: 0;
+  }
+}
+
+.error {
+  margin-top: 5px;
+  color: $danger-color;
+}

@@ -1,0 +1,72 @@
+@use '@/styles' as *;
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.button--contained {
+  color: $button-primary-text;
+  background-color: $button-primary-bg;
+  border: 2px solid $button-primary-bg;
+
+  &:hover:not(:disabled) {
+    background-color: $button-primary-bg-hover;
+    border: 2px solid $button-primary-bg-hover;
+  }
+
+  &:active:not(:disabled) {
+    background-color: $button-primary-bg-active;
+    border: 2px solid $button-primary-bg-active;
+  }
+
+  &.loading {
+    background-color: $button-primary-bg;
+    cursor: default;
+    pointer-events: none;
+  }
+}
+
+.button--outlined {
+  color: $button-primary-bg;
+  background-color: transparent;
+  border: 2px solid $button-primary-bg;
+
+  &:hover:not(:disabled) {
+    background-color: $button-primary-bg;
+    color: $button-primary-text;
+  }
+
+  &:active:not(:disabled) {
+    background-color: $button-primary-bg-active;
+    border-color: $button-primary-bg-active;
+    color: $button-primary-text;
+  }
+
+  &.loading {
+    border-color: $button-primary-bg;
+    color: $button-primary-text;
+    cursor: default;
+    pointer-events: none;
+  }
+}
+
+.button--disabled {
+  background-color: $button-primary-bg-disabled;
+  border-color: $button-primary-bg-disabled;
+  color: $text-secondary;
+  cursor: not-allowed;
+
+  &.button--outlined {
+    border-color: $button-primary-bg-disabled;
+    color: $button-primary-bg-disabled;
+  }
+}

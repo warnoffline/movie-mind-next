@@ -1,0 +1,11 @@
+@use '@/styles' as *;
+
+.loading {
+  width: 100%;
+  min-height: $vh-60;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+}

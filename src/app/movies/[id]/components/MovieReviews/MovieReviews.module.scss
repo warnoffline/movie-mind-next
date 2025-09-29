@@ -1,0 +1,56 @@
+@use '@/styles' as *;
+
+.reviews {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reviewCard {
+  padding: 12px 16px;
+  border-radius: 12px;
+  background-color: $bg-header;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reviewHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reviewContent {
+  line-height: 1.5;
+}
+
+.reviewDate {
+  font-size: 12px;
+  opacity: 0.7;
+  align-self: flex-end;
+}
+
+.skeleton {
+  background-color: $bg-header; // фон карточки, если есть
+  pointer-events: none;
+  user-select: none;
+
+  .skeletonLine {
+    background-color: $bg; // светлый серый цвет
+    border-radius: 4px;
+    animation: pulse 1.5s infinite;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}

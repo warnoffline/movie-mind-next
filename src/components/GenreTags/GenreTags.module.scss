@@ -1,0 +1,27 @@
+@use '@/styles' as *;
+
+.genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+
+  @include respond(mobile) {
+    gap: 4px;
+  }
+}
+
+.genreTag {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.isFull {
+  @include respond(mobile) {
+    font-size: 14px;
+    padding: 6px 12px;
+    border-radius: 24px;
+  }
+}
