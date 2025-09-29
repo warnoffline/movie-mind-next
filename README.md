@@ -89,6 +89,8 @@ NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=265620202234
 NEXT_PUBLIC_FIREBASE_APP_ID=1:265620202234:web:9e1731e5892a4dc9239f43
 NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=G-MYSC5YF3VC
 NEXT_PUBLIC_API_BASE_URL=http://localhost:3000/api
+```
+
 ---
 
 ## ✅ Домашняя работа №1
@@ -150,10 +152,9 @@ NEXT_PUBLIC_API_BASE_URL=http://localhost:3000/api
 
 ### Деплой
 
-- [] Приложение задеплоено на Vercel, предоставлена ссылка на прод.
+- [x] Приложение задеплоено на Vercel, предоставлена ссылка на прод.
 
 ### Приложить в README
 
 - [x] Скрипты запуска/билда.
 - [] Ссылка на прод и на исходный репозиторий (если отдельный).
-```
