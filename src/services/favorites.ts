@@ -1,40 +1,49 @@
 import { BASE_URL } from './instance';
 
-export const getFavorites = async (userId: string): Promise<number[]> => {
-  const res = await fetch(`${BASE_URL}/users/${userId}/favorites`, {
-    cache: 'no-store',
-    next: { revalidate: 60 },
-  });
-  if (!res.ok) throw new Error('Failed to fetch favorites');
-  return res.json();
-};
+export class FavoritesService {
+  private userId: string;
 
-export const setFavorites = async (userId: string, favorites: number[]) => {
-  const res = await fetch(`${BASE_URL}/users/${userId}/favorites`, {
-    method: 'PUT',
-    body: JSON.stringify({ favorites }),
-    headers: { 'Content-Type': 'application/json' },
-    cache: 'no-store',
-  });
-  if (!res.ok) throw new Error('Failed to set favorites');
-};
+  constructor(userId: string) {
+    this.userId = userId;
+  }
 
-export const addFavorite = async (userId: string, movieId: number) => {
-  const res = await fetch(`${BASE_URL}/users/${userId}/favorites`, {
-    method: 'POST',
-    body: JSON.stringify({ movieId }),
-    headers: { 'Content-Type': 'application/json' },
-    cache: 'no-store',
-  });
-  if (!res.ok) throw new Error('Failed to add favorite');
-};
+  private get endpoint() {
+    return `${BASE_URL}/users/${this.userId}/favorites`;
+  }
 
-export const removeFavorite = async (userId: string, movieId: number) => {
-  const res = await fetch(`${BASE_URL}/users/${userId}/favorites`, {
-    method: 'DELETE',
-    body: JSON.stringify({ movieId }),
-    headers: { 'Content-Type': 'application/json' },
-    cache: 'no-store',
-  });
-  if (!res.ok) throw new Error('Failed to remove favorite');
-};
+  async get(): Promise<number[]> {
+    const res = await fetch(this.endpoint, { cache: 'no-store', next: { revalidate: 60 } });
+    if (!res.ok) throw new Error('Failed to fetch favorites');
+    return res.json();
+  }
+
+  async set(favorites: number[]) {
+    const res = await fetch(this.endpoint, {
+      method: 'PUT',
+      body: JSON.stringify({ favorites }),
+      headers: { 'Content-Type': 'application/json' },
+      cache: 'no-store',
+    });
+    if (!res.ok) throw new Error('Failed to set favorites');
+  }
+
+  async add(movieId: number) {
+    const res = await fetch(this.endpoint, {
+      method: 'POST',
+      body: JSON.stringify({ movieId }),
+      headers: { 'Content-Type': 'application/json' },
+      cache: 'no-store',
+    });
+    if (!res.ok) throw new Error('Failed to add favorite');
+  }
+
+  async remove(movieId: number) {
+    const res = await fetch(this.endpoint, {
+      method: 'DELETE',
+      body: JSON.stringify({ movieId }),
+      headers: { 'Content-Type': 'application/json' },
+      cache: 'no-store',
+    });
+    if (!res.ok) throw new Error('Failed to remove favorite');
+  }
+}

@@ -1,16 +1,14 @@
-import { useStrictContext } from "@/utils/hooks/useStrictContext";
+import { useStrictContext } from '@/utils/hooks/useStrictContext';
 
-import { RootStoreContext } from "./RootStoreContext";
+import { RootStoreContext } from './RootStoreContext';
 
 export const useRootStore = () => {
   return useStrictContext({
     context: RootStoreContext,
-    message: "useRootStore must be used within a RootStoreProvider",
+    message: 'useRootStore must be used within a RootStoreProvider',
   });
 };
 
-export const useQueryParamsStore = () => useRootStore().queryParamsStore;
 export const useFavoriteStore = () => useRootStore().favoriteStore;
-export const useSearchStore = () => useRootStore().searchStore;
 export const useUserStore = () => useRootStore().userStore;
 export const useAlertStore = () => useRootStore().alertStore;

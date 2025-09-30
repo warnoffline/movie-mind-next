@@ -6,7 +6,6 @@ import { observer } from 'mobx-react-lite';
 import { Button } from '@/components/Button';
 import { GithubIcon } from '@/components/icons/GithubIcon';
 import { GoogleIcon } from '@/components/icons/GoogleIcon';
-import { Loading } from '@/components/Loading';
 import { Text } from '@/components/Text';
 import { useUserStore } from '@/store/useRootStore';
 
@@ -15,11 +14,7 @@ import { AuthForm } from './components/AuthForm';
 import { containerVariants, itemVariants } from './config';
 
 const AuthPage = observer(() => {
-  const { loadingStage, loginWithGithub, loginWithGoogle } = useUserStore();
-
-  if (!loadingStage.isFinished) {
-    return <Loading text="Входим в аккаунт..." />;
-  }
+  const { loginWithGithub, loginWithGoogle } = useUserStore();
 
   return (
     <motion.div

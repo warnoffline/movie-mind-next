@@ -1,0 +1,22 @@
+@use '@/styles' as *;
+
+.reviews {
+  &__section {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    @include respond(tablet) {
+      padding: 30px 20px;
+    }
+
+    @include respond(mobile) {
+      padding: 20px 0px;
+    }
+  }
+
+  &__pagination {
+    position: relative;
+  }
+}

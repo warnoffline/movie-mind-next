@@ -1,7 +1,7 @@
 import { action, computed, makeObservable, reaction, runInAction } from 'mobx';
 
-import { getMoviesByGenres } from '@/services/movies';
-import { addMovieReview, getMovieReviews } from '@/services/reviews';
+import { MoviesService } from '@/services/movies';
+import { ReviewsService } from '@/services/reviews';
 import { LoadingStageModel } from '@/store/models/LoadingStageModel';
 import { PaginationModel } from '@/store/models/PaginationModel';
 import { ValueModel } from '@/store/models/ValueModel';
@@ -11,12 +11,14 @@ import type { ILocalStore } from '@/types/store';
 export class MovieStore implements ILocalStore {
   private readonly _movie = new ValueModel<IMovie | null>(null);
   private readonly _similarMovies = new ValueModel<IMovieShort[]>([]);
+  private readonly _reviews = new ValueModel<IMovieReview[]>([]);
+  private readonly _moviesService = new MoviesService();
+  private readonly _reviewsService = new ReviewsService();
 
   readonly loadingStage = new LoadingStageModel();
   readonly similarLoadingStage = new LoadingStageModel();
-
-  private readonly _reviews = new ValueModel<IMovieReview[]>([]);
   readonly reviewsLoadingStage = new LoadingStageModel();
+
   readonly pagination = new PaginationModel(5);
 
   constructor(initData: IMovie) {
@@ -30,15 +32,14 @@ export class MovieStore implements ILocalStore {
       totalPages: computed,
       setPage: action.bound,
       addReview: action.bound,
-      loadReviews: action.bound,
     });
 
-    this.initFromServer();
+    this._initFromServer();
 
     reaction(
       () => this.page,
       () => {
-        this.loadReviews();
+        this._loadReviews();
       }
     );
   }
@@ -51,15 +52,15 @@ export class MovieStore implements ILocalStore {
     return this.pagination.totalPages;
   }
 
-  get reviews(): IMovieReview[] {
+  get reviews() {
     return this._reviews.value;
   }
 
-  get movie(): IMovie | null {
+  get movie() {
     return this._movie.value;
   }
 
-  get similarMovies(): IMovieShort[] {
+  get similarMovies() {
     return this._similarMovies.value;
   }
 
@@ -68,26 +69,40 @@ export class MovieStore implements ILocalStore {
     this.pagination.setPage(page);
   }
 
-  async loadReviews() {
+  async addReview(review: { author: string; content: string; rating?: number }) {
     const movie = this.movie;
     if (!movie) return;
 
     this.reviewsLoadingStage.loading();
+
     try {
-      const fetchedReviews = await getMovieReviews(String(movie.id), this.page);
+      await this._reviewsService.addReview(movie.id, review);
+      await this._loadReviews();
+      this.reviewsLoadingStage.success();
+    } catch {
+      this.reviewsLoadingStage.error();
+    }
+  }
+
+  private async _loadReviews() {
+    const movie = this.movie;
+    if (!movie) return;
+
+    this.reviewsLoadingStage.loading();
+
+    try {
+      const fetchedReviews = await this._reviewsService.getReviews(movie.id, this.page);
       runInAction(() => {
         this._reviews.change(fetchedReviews.reviews);
         this.pagination.setTotalCounts(fetchedReviews.totalCounts);
         this.reviewsLoadingStage.success();
       });
     } catch {
-      runInAction(() => {
-        this.reviewsLoadingStage.error();
-      });
+      this.reviewsLoadingStage.error();
     }
   }
 
-  async initFromServer() {
+  private async _initFromServer() {
     const movie = this._movie.value;
     if (!movie) return;
 
@@ -98,8 +113,8 @@ export class MovieStore implements ILocalStore {
       const genres = movie.genres.map((g) => g.name);
 
       const [similarResponse, reviewsResponse] = await Promise.all([
-        getMoviesByGenres(genres, 1, 16),
-        getMovieReviews(String(movie.id)),
+        this._moviesService.getMoviesByGenres(genres, 1, 16),
+        this._reviewsService.getReviews(movie.id),
       ]);
 
       runInAction(() => {
@@ -115,20 +130,6 @@ export class MovieStore implements ILocalStore {
         this.similarLoadingStage.error();
         this.reviewsLoadingStage.error();
       });
-    }
-  }
-
-  async addReview(review: { author: string; content: string; rating?: number }) {
-    const movie = this.movie;
-    if (!movie) return;
-
-    this.reviewsLoadingStage.loading();
-    try {
-      await addMovieReview(movie.id, review);
-      await this.loadReviews();
-      this.reviewsLoadingStage.success();
-    } catch {
-      this.reviewsLoadingStage.error();
     }
   }
 

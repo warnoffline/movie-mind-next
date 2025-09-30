@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { observer } from 'mobx-react-lite';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Suspense } from 'react';
+import { Suspense, useCallback } from 'react';
 
 import { Button } from '@/components/Button';
 import { PersonIcon } from '@/components/icons/PersonIcon';
@@ -18,10 +18,10 @@ const Profile = observer(() => {
   const { user, logout } = useUserStore();
   const router = useRouter();
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     logout();
     router.push('/login');
-  };
+  }, [logout, router]);
 
   return (
     <motion.div
@@ -37,8 +37,8 @@ const Profile = observer(() => {
               Профиль
             </Text>
           </motion.div>
-          <motion.div className={s.avatarSection} variants={itemVariants}>
-            <div className={s.avatarWrapper}>
+          <motion.div className={s.avatar__section} variants={itemVariants}>
+            <div className={s.avatar__wrapper}>
               {user?.photoURL ? (
                 <Image
                   src={user.photoURL}

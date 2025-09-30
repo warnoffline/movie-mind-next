@@ -1,6 +1,6 @@
 import { action, computed, makeObservable, runInAction, reaction } from 'mobx';
 
-import { getMoviesByIds } from '@/services/movies';
+import { MoviesService } from '@/services/movies';
 import type { FavoritesStore } from '@/store/FavoriteStore';
 import { LoadingStageModel } from '@/store/models/LoadingStageModel';
 import { PaginationModel } from '@/store/models/PaginationModel';
@@ -13,20 +13,21 @@ import type { FavoriteQueryFilters, FavoriteSetFilters } from './types';
 export class FavoritesPageStore implements ILocalStore {
   private readonly _movies = new ValueModel<IMovieShort[]>([]);
   readonly loadingStage = new LoadingStageModel();
-  readonly pagination = new PaginationModel(10);
+  readonly pagination = new PaginationModel();
+  private readonly _service = new MoviesService();
 
-  private queryFilters: FavoriteQueryFilters;
-  private setQueryFilters: FavoriteSetFilters;
-  private favoritesStore: FavoritesStore;
+  private readonly _queryFilters: FavoriteQueryFilters;
+  private readonly _setQueryFilters: FavoriteSetFilters;
+  private readonly _favoritesStore: FavoritesStore;
 
   constructor(
     favoritesStore: FavoritesStore,
     queryFilters: FavoriteQueryFilters,
     setQueryFilters: FavoriteSetFilters
   ) {
-    this.queryFilters = queryFilters;
-    this.setQueryFilters = setQueryFilters;
-    this.favoritesStore = favoritesStore;
+    this._queryFilters = queryFilters;
+    this._setQueryFilters = setQueryFilters;
+    this._favoritesStore = favoritesStore;
 
     makeObservable(this, {
       movies: computed,
@@ -38,24 +39,20 @@ export class FavoritesPageStore implements ILocalStore {
     this.initFromQuery();
 
     reaction(
-      () => this.favoritesStore.favorites.slice(),
-      () => this.loadMovies()
+      () => this._favoritesStore.favorites.slice(),
+      () => this._loadMovies()
     );
 
     reaction(
       () => this.pagination.page,
-      () => this.loadMovies()
+      () => this._loadMovies()
     );
   }
 
   initFromQuery() {
-    const pg = this.queryFilters.page ?? 1;
+    const pg = this._queryFilters.page ?? 1;
     this.pagination.setPage(pg);
-    this.loadMovies();
-  }
-
-  syncQuery() {
-    this.setQueryFilters({ page: this.page });
+    this._loadMovies();
   }
 
   get page() {
@@ -73,11 +70,15 @@ export class FavoritesPageStore implements ILocalStore {
   setPage(page: number) {
     if (page === this.page) return;
     this.pagination.setPage(page);
-    this.syncQuery();
+    this._syncQuery();
   }
 
-  private async loadMovies() {
-    const favIds = this.favoritesStore.favorites;
+  private _syncQuery() {
+    this._setQueryFilters({ page: this.page });
+  }
+
+  private async _loadMovies() {
+    const favIds = this._favoritesStore.favorites;
     if (favIds.length === 0) {
       runInAction(() => {
         this._movies.change([]);
@@ -95,7 +96,7 @@ export class FavoritesPageStore implements ILocalStore {
       const start = (this.pagination.page - 1) * this.pagination.limit;
       const idsPage = favIds.slice(start, start + this.pagination.limit);
 
-      const { movies } = await getMoviesByIds(idsPage.map(String));
+      const { movies } = await this._service.getMoviesByIds(idsPage.map(String), 1, idsPage.length);
       runInAction(() => {
         const moviesSorted = idsPage.map((id) => movies.find((m) => m.id === id)).filter(Boolean);
         this._movies.change(moviesSorted as IMovieShort[]);

@@ -19,10 +19,11 @@ import { defaultLinks, type HeaderLink } from './config';
 import { SearchStoreProvider, useSearchStore } from './model';
 import { BurgerIcon } from '../icons/BurgerIcon';
 import { CloseIcon } from '../icons/CloseIcon';
+import { Skeleton } from '../Skeleton';
 
 const Header = observer(() => {
   const { query, setQuery, filteredMovies } = useSearchStore();
-  const { isAuthorized, user } = useUserStore();
+  const { isAuthorized, user, loadingStage } = useUserStore();
   const [isFocused, setIsFocused] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [inputValue, setInputValue] = useState(query);
@@ -100,7 +101,11 @@ const Header = observer(() => {
                 className={isActive ? s.activeLink : undefined}
                 onClick={() => setIsMenuOpen(false)}
               >
-                {link.name}
+                {link.path === '/login' && loadingStage.isLoading ? (
+                  <Skeleton height={'100%'} width={'60px'} />
+                ) : (
+                  link.name
+                )}
               </Link>
             );
           })}

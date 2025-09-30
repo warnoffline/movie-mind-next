@@ -89,47 +89,6 @@
   }
 }
 
-.reviews {
-  &__section {
-    padding: 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-
-    @include respond(tablet) {
-      padding: 30px 20px;
-    }
-
-    @include respond(mobile) {
-      padding: 20px 0px;
-    }
-  }
-
-  &__pagination {
-    position: relative;
-  }
-}
-
-.similar {
-  padding: 40px 0;
-
-  @include respond(tablet) {
-    padding: 30px 0;
-  }
-
-  @include respond(mobile) {
-    padding: 20px 0;
-  }
-
-  &__header {
-    padding: 20px 40px;
-
-    @include respond(tablet) {
-      padding: 16px 20px;
-    }
-  }
-}
-
 .button {
   border-radius: 24px;
   padding: 5px 10px;

@@ -8,34 +8,19 @@ import { Suspense } from 'react';
 
 import { Button } from '@/components/Button';
 import { Loading } from '@/components/Loading';
-import { MovieList } from '@/components/MovieList';
-import { Pagination } from '@/components/Pagination';
 import { Text } from '@/components/Text';
-import { useUserStore } from '@/store';
 
 import { containerVariants, itemVariants } from './config';
 import { useMovieStore } from '../../model';
-import { AddReviewForm } from '../AddReviewForm';
 import { GoBackButton } from '../GoBackButton';
 import { MovieInfo } from '../MovieInfo';
+import { ReviewSection } from './components/ReviewSection/ReviewSection';
+import { SimilarMovies } from './components/SimilarMovies/SimilarMovies';
 import s from './Movie.module.scss';
-import { MovieReviews } from '../MovieReviews';
-import { MovieReviewsSkeleton } from '../MovieReviews';
 
 const Movie = observer(() => {
   const router = useRouter();
-  const {
-    loadingStage,
-    similarLoadingStage,
-    movie,
-    similarMovies,
-    reviews,
-    reviewsLoadingStage,
-    totalPages,
-    page,
-    setPage,
-  } = useMovieStore();
-  const { isAuthorized } = useUserStore();
+  const { loadingStage, movie } = useMovieStore();
 
   if (loadingStage.isLoading) return <Loading />;
 
@@ -90,56 +75,9 @@ const Movie = observer(() => {
         </motion.div>
       </motion.div>
 
-      <motion.div
-        className={s.reviews__section}
-        initial="hidden"
-        animate="visible"
-        variants={containerVariants}
-      >
-        <div className={s.reviews__header}>
-          <Text color="primary" view="title">
-            Отзывы
-          </Text>
-        </div>
-        {isAuthorized && <AddReviewForm />}
-        {reviewsLoadingStage.isLoading ? (
-          <MovieReviewsSkeleton count={3} />
-        ) : (
-          <MovieReviews reviews={reviews} />
-        )}
-        {totalPages > 1 && (
-          <div className={s.reviews__pagination}>
-            <Pagination page={page} totalPages={totalPages} onChange={setPage} />
-          </div>
-        )}
-      </motion.div>
+      <ReviewSection />
 
-      <motion.div
-        className={s.similar}
-        initial="hidden"
-        animate="visible"
-        variants={containerVariants}
-      >
-        <div className={s.similar__header}>
-          <Text color="primary" view="title">
-            Похожее по жанрам
-          </Text>
-        </div>
-
-        {similarLoadingStage.isLoading ? (
-          <Loading />
-        ) : (
-          <motion.div
-            className={s.movies__list}
-            variants={{
-              hidden: {},
-              visible: { transition: { staggerChildren: 0.1 } },
-            }}
-          >
-            <MovieList movies={similarMovies} />
-          </motion.div>
-        )}
-      </motion.div>
+      <SimilarMovies />
     </>
   );
 });

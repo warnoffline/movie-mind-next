@@ -1,74 +1,82 @@
-import { action, makeObservable, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, runInAction } from 'mobx';
 
-import { searchMoviesByTitle } from '@/services/movies';
+import { MoviesService } from '@/services/movies';
 import { LoadingStageModel } from '@/store/models/LoadingStageModel';
+import { ValueModel } from '@/store/models/ValueModel';
 import type { IMovieShort } from '@/types/movies';
+import type { ILocalStore } from '@/types/store';
 
 import type { SearchQueryFilters, SearchSetFilters } from './types';
 
-export class SearchStore {
-  query = '';
-  filteredMovies: IMovieShort[] = [];
+export class SearchStore implements ILocalStore {
+  private readonly _query = new ValueModel<string>('');
+  private readonly _filteredMovies = new ValueModel<IMovieShort[]>([]);
   readonly loadingStage = new LoadingStageModel();
 
-  private queryFilters: SearchQueryFilters;
-  private setQueryFilters: SearchSetFilters;
+  private readonly _queryFilters: SearchQueryFilters;
+  private readonly _setQueryFilters: SearchSetFilters;
+  private readonly _service = new MoviesService();
 
   constructor(queryFilters: SearchQueryFilters, setQueryFilters: SearchSetFilters) {
     makeObservable(this, {
-      query: observable,
-      filteredMovies: observable,
+      query: computed,
+      filteredMovies: computed,
       setQuery: action.bound,
-      clear: action.bound,
-      search: action.bound,
-      initFromQuery: action.bound,
     });
 
-    this.queryFilters = queryFilters;
-    this.setQueryFilters = setQueryFilters;
+    this._queryFilters = queryFilters;
+    this._setQueryFilters = setQueryFilters;
+
+    this._initFromQuery();
   }
 
-  initFromQuery() {
-    this.query = this.queryFilters.query ?? '';
-    if (this.query) {
-      this.search();
-    }
-    this.syncQuery();
+  get query() {
+    return this._query.value;
   }
 
-  private syncQuery() {
-    this.setQueryFilters({ query: this.query || null });
+  get filteredMovies() {
+    return this._filteredMovies.value;
   }
 
   setQuery(value: string) {
-    this.query = value;
-    this.search();
-    this.syncQuery();
+    this._query.change(value);
+    this._search();
+    this._syncQuery();
   }
 
-  clear() {
-    this.query = '';
-    this.filteredMovies = [];
-    this.syncQuery();
+  private _initFromQuery() {
+    this._query.change(this._queryFilters.query ?? '');
+
+    if (this.query) {
+      this._search();
+    }
+    this._syncQuery();
   }
 
-  async search() {
+  private _syncQuery() {
+    this._setQueryFilters({ query: this.query || null });
+  }
+
+  private async _search() {
     if (!this.query.trim()) {
-      runInAction(() => {
-        this.filteredMovies = [];
-      });
+      this._filteredMovies.change([]);
       return;
     }
 
     this.loadingStage.loading();
     try {
-      const results = await searchMoviesByTitle(this.query);
+      const results = await this._service.searchMoviesByTitle(this.query);
+
       runInAction(() => {
-        this.filteredMovies = results;
+        this._filteredMovies.change(results);
         this.loadingStage.success();
       });
     } catch {
       runInAction(() => this.loadingStage.error());
     }
+  }
+
+  destroy(): void {
+    // no
   }
 }

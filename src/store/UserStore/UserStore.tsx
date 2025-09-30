@@ -19,10 +19,11 @@ import type { AlertStore } from '../AlertStore';
 export class UserStore {
   private readonly _user = new ValueModel<FirebaseUser | null>(null);
   readonly loadingStage = new LoadingStageModel();
-  private readonly alertStore: AlertStore;
+
+  private readonly _alertStore: AlertStore;
 
   constructor(alertStore: AlertStore) {
-    this.alertStore = alertStore;
+    this._alertStore = alertStore;
 
     makeObservable(this, {
       user: computed,
@@ -65,9 +66,9 @@ export class UserStore {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
       this.setUser(result.user);
-      this.alertStore.add('Вход выполнен успешно', 'success');
+      this._alertStore.add('Вход выполнен успешно', 'success');
     } catch (error) {
-      this.alertStore.add('Неверные данные', 'error');
+      this._alertStore.add('Неверные данные', 'error');
       throw error;
     } finally {
       this.loadingStage.success();
@@ -79,9 +80,9 @@ export class UserStore {
     try {
       const result = await createUserWithEmailAndPassword(auth, email, password);
       this.setUser(result.user);
-      this.alertStore.add('Регистрация выполнена успешно', 'success');
+      this._alertStore.add('Регистрация выполнена успешно', 'success');
     } catch (error) {
-      this.alertStore.add('Ошибка регистрации', 'error');
+      this._alertStore.add('Ошибка регистрации', 'error');
       throw error;
     } finally {
       this.loadingStage.success();
@@ -93,9 +94,9 @@ export class UserStore {
     try {
       const result = await signInWithPopup(auth, provider);
       this.setUser(result.user);
-      this.alertStore.add('Вход выполнен успешно', 'success');
+      this._alertStore.add('Вход выполнен успешно', 'success');
     } catch (error: unknown) {
-      this.alertStore.add(`Ошибка входа: ${(error as Error).message}`, 'error');
+      this._alertStore.add(`Ошибка входа: ${(error as Error).message}`, 'error');
     } finally {
       this.loadingStage.success();
     }
@@ -109,10 +110,10 @@ export class UserStore {
     try {
       await signOut(auth);
       this._user.reset();
-      this.alertStore.add('Вы вышли из аккаунта', 'info');
+      this._alertStore.add('Вы вышли из аккаунта', 'info');
     } catch {
       this.loadingStage.error();
-      this.alertStore.add('Ошибка при выходе из аккаунта', 'error');
+      this._alertStore.add('Ошибка при выходе из аккаунта', 'error');
     } finally {
       this.loadingStage.success();
     }

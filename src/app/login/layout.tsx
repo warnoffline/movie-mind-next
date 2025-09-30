@@ -17,7 +17,7 @@ const LoginLayout = observer(({ children }: { children: React.ReactNode }) => {
     }
   }, [userStore.isAuthorized, userStore.loadingStage.isFinished, router]);
 
-  if (userStore.loadingStage.isLoading) return <Loading />;
+  if (userStore.loadingStage.isLoading) return <Loading text="Проверяем данные..." />;
   if (userStore.isAuthorized) return null;
 
   return <>{children}</>;

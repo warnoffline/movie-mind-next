@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 
-import { getMovie } from '@/services/movies';
+import { MoviesService } from '@/services/movies';
 
 import { Movie } from './components/Movie';
 import { MovieStoreProvider } from './model';
@@ -11,8 +11,9 @@ type MoviePageProps = {
 
 export default async function MoviePage({ params }: MoviePageProps) {
   const { id } = await params;
+  const moviesService = new MoviesService();
 
-  const movieInitData = await getMovie(id);
+  const movieInitData = await moviesService.getMovie(id);
 
   if (!movieInitData) notFound();
 

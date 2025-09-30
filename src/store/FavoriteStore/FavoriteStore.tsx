@@ -1,6 +1,6 @@
 import { action, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
 
-import { getFavorites, setFavorites } from '@/services/favorites';
+import { FavoritesService } from '@/services/favorites';
 
 import { LoadingStageModel } from '../models/LoadingStageModel';
 
@@ -12,6 +12,7 @@ export class FavoritesStore {
   favorites: number[] = [];
   readonly loadingStage = new LoadingStageModel();
   private _userStore: UserStore;
+  private _service?: FavoritesService;
 
   constructor(userStore: UserStore) {
     this._userStore = userStore;
@@ -26,7 +27,7 @@ export class FavoritesStore {
 
     if (typeof window !== 'undefined' && !this._userStore.user) {
       runInAction(() => {
-        this.favorites = this.loadFromLocalStorage();
+        this.favorites = this._loadFromLocalStorage();
       });
     }
 
@@ -34,9 +35,11 @@ export class FavoritesStore {
       () => this._userStore.user,
       (user, prevUser) => {
         if (user && !prevUser) {
-          this.loadForUser(user.uid);
+          this._service = new FavoritesService(user.uid);
+          this.loadForUser();
         } else if (!user && prevUser) {
-          this.loadFromLocalOnLogout();
+          this._service = undefined;
+          this._loadFromLocalOnLogout();
         }
       }
     );
@@ -46,18 +49,19 @@ export class FavoritesStore {
     return (id: number) => this.favorites.includes(id);
   }
 
-  private async loadForUser(uid: string) {
+  private async loadForUser() {
+    if (!this._service) return;
     this.loadingStage.loading();
     try {
-      const localFavs = this.loadFromLocalStorage();
-      const serverFavs = await getFavorites(uid);
+      const localFavs = this._loadFromLocalStorage();
+      const serverFavs = await this._service.get();
       const merged = Array.from(new Set([...localFavs, ...serverFavs]));
 
       runInAction(() => {
         this.favorites = merged;
       });
 
-      await setFavorites(uid, merged);
+      await this._service.set(merged);
       localStorage.removeItem(FAVORITES_KEY);
       this.loadingStage.success();
     } catch {
@@ -86,26 +90,26 @@ export class FavoritesStore {
   }
 
   private async sync() {
-    if (this._userStore.isAuthorized && this._userStore.user) {
-      await setFavorites(this._userStore.user.uid, this.favorites);
+    if (this._userStore.isAuthorized && this._userStore.user && this._service) {
+      await this._service.set(this.favorites);
     } else {
-      this.saveToLocalStorage();
+      this._saveToLocalStorage();
     }
   }
 
-  private saveToLocalStorage() {
+  private _saveToLocalStorage() {
     localStorage.setItem(FAVORITES_KEY, JSON.stringify(this.favorites));
   }
 
-  private loadFromLocalStorage(): number[] {
+  private _loadFromLocalStorage(): number[] {
     if (typeof window === 'undefined') return [];
     const saved = localStorage.getItem(FAVORITES_KEY);
     return saved ? JSON.parse(saved) : [];
   }
 
-  private loadFromLocalOnLogout() {
+  private _loadFromLocalOnLogout() {
     runInAction(() => {
-      this.favorites = this.loadFromLocalStorage();
+      this.favorites = this._loadFromLocalStorage();
     });
   }
 }

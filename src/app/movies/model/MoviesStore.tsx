@@ -1,6 +1,6 @@
-import { makeObservable, observable, action, computed, runInAction } from 'mobx';
+import { makeObservable, action, computed, runInAction } from 'mobx';
 
-import { getMovies, getMoviesByGenres } from '@/services/movies';
+import { MoviesService } from '@/services/movies';
 import { LoadingStageModel } from '@/store/models/LoadingStageModel';
 import { PaginationModel } from '@/store/models/PaginationModel';
 import { ValueModel } from '@/store/models/ValueModel';
@@ -10,54 +10,41 @@ import type { ILocalStore } from '@/types/store';
 import type { MoviesQueryFilters, MoviesSetFilters } from './types';
 
 export class MoviesStore implements ILocalStore {
-  readonly _movies = new ValueModel<IMovieShort[]>([]);
+  private readonly _movies = new ValueModel<IMovieShort[]>([]);
+  private readonly _selectedCategory = new ValueModel<string | null>(null);
   readonly loadingStage = new LoadingStageModel();
   readonly pagination = new PaginationModel();
+  private readonly _service = new MoviesService();
 
-  selectedCategory: string | null = null;
-
-  private queryFilters: MoviesQueryFilters;
-  private setQueryFilters: MoviesSetFilters;
+  private readonly _queryFilters: MoviesQueryFilters;
+  private readonly _setQueryFilters: MoviesSetFilters;
 
   constructor(
     queryFilters: MoviesQueryFilters,
     setQueryFilters: MoviesSetFilters,
     initData: IGetMoviesResponse
   ) {
+    this._queryFilters = queryFilters;
+    this._setQueryFilters = setQueryFilters;
+
     makeObservable(this, {
-      selectedCategory: observable,
+      selectedCategory: computed,
       page: computed,
       movies: computed,
       totalPages: computed,
       setPage: action.bound,
       setCategory: action.bound,
-      loadMovies: action.bound,
-      initFromQuery: action.bound,
     });
 
     this._movies.change(initData.movies);
     this.pagination.setTotalCounts(initData.totalCounts);
     this.pagination.setPage(initData.page);
-    this.queryFilters = queryFilters;
-    this.setQueryFilters = setQueryFilters;
 
-    this.initFromQuery();
+    this._initFromQuery();
   }
 
-  initFromQuery() {
-    const cat = this.queryFilters.category ?? null;
-    const pg = this.queryFilters.page ?? 1;
-
-    this.selectedCategory = cat ? String(cat) : null;
-    this.pagination.setPage(Number(pg));
-
-    this.loadMovies();
-  }
-
-  syncQuery() {
-    const filters: Record<string, string | number | null> = { page: this.page };
-    filters.category = this.selectedCategory;
-    this.setQueryFilters(filters);
+  get selectedCategory() {
+    return this._selectedCategory.value;
   }
 
   get page() {
@@ -75,24 +62,34 @@ export class MoviesStore implements ILocalStore {
   setPage(page: number) {
     if (page === this.page) return;
     this.pagination.setPage(page);
-    this.loadMovies();
-    this.syncQuery();
+    this._loadMovies();
+    this._syncQuery();
   }
 
   setCategory(category: string | null) {
     if (category === this.selectedCategory) return;
-    this.selectedCategory = category;
+    this._selectedCategory.change(category);
     this.pagination.setPage(1);
-    this.loadMovies();
-    this.syncQuery();
+    this._loadMovies();
+    this._syncQuery();
   }
 
-  async loadMovies() {
+  private _syncQuery() {
+    const filters: Record<string, string | number | null> = { page: this.page };
+    filters.category = this.selectedCategory;
+    this._setQueryFilters(filters);
+  }
+
+  private async _loadMovies() {
     this.loadingStage.loading();
     try {
       const response = this.selectedCategory
-        ? await getMoviesByGenres([this.selectedCategory], this.page, this.pagination.limit)
-        : await getMovies(this.page, this.pagination.limit);
+        ? await this._service.getMoviesByGenres(
+            [this.selectedCategory],
+            this.page,
+            this.pagination.limit
+          )
+        : await this._service.getMovies(this.page, this.pagination.limit);
 
       runInAction(() => {
         this._movies.change(response.movies);
@@ -100,8 +97,18 @@ export class MoviesStore implements ILocalStore {
         this.loadingStage.success();
       });
     } catch {
-      runInAction(() => this.loadingStage.error());
+      this.loadingStage.error();
     }
+  }
+
+  private _initFromQuery() {
+    const cat = this._queryFilters.category ?? null;
+    const pg = this._queryFilters.page ?? 1;
+
+    this._selectedCategory.change(cat ? String(cat) : null);
+    this.pagination.setPage(Number(pg));
+
+    this._loadMovies();
   }
 
   destroy(): void {
