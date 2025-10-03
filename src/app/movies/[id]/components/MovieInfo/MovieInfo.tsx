@@ -31,6 +31,17 @@ export const MovieInfo: React.FC<MovieInfoProps> = ({ movie }) => {
           {movie.description}
         </Text>
       )}
+      {movie.trailerUrl && (
+        <div>
+          <iframe
+            className={s.movie__trailer}
+            src={movie.trailerUrl}
+            allow="autoplay; clipboard-write"
+            allowFullScreen
+            title="Movie trailer"
+          />
+        </div>
+      )}
 
       <div className={s.meta}>
         <div className={s.meta__item}>

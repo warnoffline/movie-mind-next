@@ -69,7 +69,7 @@ const Movie = observer(() => {
             )}
           </motion.div>
 
-          <motion.div variants={itemVariants}>
+          <motion.div variants={itemVariants} className={s.movie__info}>
             <MovieInfo movie={movie} />
           </motion.div>
         </motion.div>

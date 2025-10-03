@@ -13,6 +13,29 @@
   }
 }
 
+.movie__trailer {
+  width: 720px;
+  height: 420px;
+  border-radius: 16px;
+  border: 2px solid $text-accent;
+
+  @include respond(desktop) {
+    width: 100%;
+    height: 400px;
+  }
+
+  @include respond(tablet) {
+    width: 100%;
+    height: 360px;
+  }
+
+  @include respond(mobile) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+}
+
 .description {
   margin-bottom: 16px;
   line-height: 1.5;

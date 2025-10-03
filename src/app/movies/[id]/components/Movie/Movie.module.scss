@@ -87,6 +87,10 @@
     filter: brightness(0.5) blur(4px);
     z-index: 0;
   }
+
+  &__info {
+    width: 100%;
+  }
 }
 
 .button {

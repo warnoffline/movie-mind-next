@@ -60,6 +60,7 @@ export type IMovie = {
     russianFilmCritics: number;
   };
   year: number;
+  trailerUrl?: string;
 };
 
 export type IMovieResponse = {
