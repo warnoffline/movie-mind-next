@@ -73,15 +73,12 @@
 
   :hover {
     color: $text-accent-hover;
-    transform: scale(1.1);
   }
 }
 
 .navPrev {
   left: 0;
-  transform: rotate(90deg);
 }
 .navNext {
   right: 0;
-  transform: rotate(270deg);
 }

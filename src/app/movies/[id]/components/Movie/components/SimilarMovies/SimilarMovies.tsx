@@ -4,8 +4,7 @@ import { motion } from 'framer-motion';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
-import { Loading } from '@/components/Loading';
-import { MovieList } from '@/components/MovieList';
+import { MovieList, MovieListSkeletons } from '@/components/MovieList';
 import { Text } from '@/components/Text';
 
 import s from './SimilarMovies.module.scss';
@@ -28,7 +27,7 @@ export const SimilarMovies = observer(() => {
       </div>
 
       {similarLoadingStage.isLoading ? (
-        <Loading />
+        <MovieListSkeletons />
       ) : (
         <motion.div
           className={s.movies__list}

@@ -8,15 +8,15 @@ import { Text } from '@/components/Text';
 import { useUserStore } from '@/store';
 
 import s from './ReviewSection.module.scss';
-import { useMovieStore } from '../../../../model';
 import { containerVariants } from '../../config';
+import { useReviewStore } from '../../model';
 import { AddReviewForm } from '../AddReviewForm';
 import { MovieReviewsSkeleton } from '../MovieReviews';
 import { MovieReviews } from '../MovieReviews';
 
 export const ReviewSection = observer(() => {
-  const { reviews, reviewsLoadingStage, totalPages, page, setPage } = useMovieStore();
   const { isAuthorized } = useUserStore();
+  const { reviews, loadingStage, totalPages, page, setPage } = useReviewStore();
 
   return (
     <motion.div
@@ -31,7 +31,7 @@ export const ReviewSection = observer(() => {
         </Text>
       </div>
       {isAuthorized && <AddReviewForm />}
-      {reviewsLoadingStage.isLoading ? (
+      {loadingStage.isLoading ? (
         <MovieReviewsSkeleton count={3} />
       ) : (
         <MovieReviews reviews={reviews} />

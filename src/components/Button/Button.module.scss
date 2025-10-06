@@ -10,7 +10,11 @@
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color 0.2s, color 0.2s, transform 0.2s;
+
+  &:active {
+    transform: scale(0.95);
+  }
 }
 
 .button--contained {

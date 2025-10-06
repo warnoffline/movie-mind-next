@@ -1,5 +1,3 @@
-'use client';
-
 import { Text } from '@/components/Text';
 
 import s from './NotFound.module.scss';

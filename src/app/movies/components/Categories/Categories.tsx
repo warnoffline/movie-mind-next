@@ -9,7 +9,8 @@ import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-import ArrowDownIcon from '@/components/icons/ArrowDownIcon';
+import { ArrowLeftIcon } from '@/components/icons/ArrowLeftIcon';
+import { ArrowRightIcon } from '@/components/icons/ArrowRightIcon';
 import { Text } from '@/components/Text';
 import { GENRE_NAME_MAP, GENRE_IMAGES_MAP, RU_TO_EN_GENRE_MAP } from '@/utils/genres';
 
@@ -36,12 +37,20 @@ const Categories: React.FC<Props> = ({ selectedCategory, onSelectCategory }) => 
       </Text>
 
       <div className={s.categories__inner}>
-        <div className={s.navPrev}>
-          <ArrowDownIcon />
-        </div>
-        <div className={s.navNext}>
-          <ArrowDownIcon />
-        </div>
+        <motion.div
+          className={s.navPrev}
+          whileHover={{ scale: 1.2, transition: { duration: 0.2 } }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <ArrowLeftIcon />
+        </motion.div>
+        <motion.div
+          className={s.navNext}
+          whileHover={{ scale: 1.2, transition: { duration: 0.2 } }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <ArrowRightIcon />
+        </motion.div>
         <Swiper
           modules={[Navigation]}
           navigation={{

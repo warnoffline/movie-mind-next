@@ -2,19 +2,19 @@
 
 import { observer } from 'mobx-react-lite';
 
-import { Loading } from '@/components/Loading';
 import { MovieList } from '@/components/MovieList';
 import { Pagination } from '@/components/Pagination';
 import { Text } from '@/components/Text';
 
 import s from './Favorites.module.scss';
 import { useFavoritesPageStore } from '../../model';
+import { LoadingMovies } from '../LoadingMovies';
 
 const Favorites = observer(() => {
   const { movies, loadingStage, totalPages, page, setPage } = useFavoritesPageStore();
 
   if (loadingStage.isLoading) {
-    return <Loading />;
+    return <LoadingMovies />;
   }
 
   if (!loadingStage.isSuccess || movies.length === 0) {

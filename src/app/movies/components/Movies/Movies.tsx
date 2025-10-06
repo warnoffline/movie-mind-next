@@ -2,8 +2,7 @@
 
 import { observer } from 'mobx-react-lite';
 
-import { Loading } from '@/components/Loading';
-import { MovieList } from '@/components/MovieList';
+import { MovieList, MovieListSkeletons } from '@/components/MovieList';
 import { Pagination } from '@/components/Pagination';
 import { Text } from '@/components/Text';
 
@@ -30,7 +29,7 @@ const Movies = observer(() => {
         }}
       />
 
-      {loadingStage.isLoading && <Loading />}
+      {loadingStage.isLoading && <MovieListSkeletons />}
 
       {loadingStage.isFinished && movies.length < 1 && (
         <div className={s.empty}>

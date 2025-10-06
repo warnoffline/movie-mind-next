@@ -1,7 +1,7 @@
 'use client';
 
 import { useQueryStates } from 'nuqs';
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useEffect } from 'react';
 
 import { MOVIES_PAGE_SEARCH_PARAMS_PARSER } from '@/configs/searchParams';
 import type { IGetMoviesResponse } from '@/types/movies';
@@ -20,6 +20,12 @@ export const MoviesStoreProvider: React.FC<ProviderProps> = ({ children, initDat
   const [queryFilters, setQueryFilters] = useQueryStates(MOVIES_PAGE_SEARCH_PARAMS_PARSER);
 
   const moviesStore = useLocalStore(() => new MoviesStore(queryFilters, setQueryFilters, initData));
+
+  useEffect(() => {
+    return () => {
+      moviesStore.store.destroy();
+    };
+  }, [moviesStore]);
 
   return (
     <MoviesStoreContext.Provider value={moviesStore.store}>{children}</MoviesStoreContext.Provider>

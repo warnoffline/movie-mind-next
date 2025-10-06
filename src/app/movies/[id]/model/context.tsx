@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useEffect } from 'react';
 
 import type { IMovie } from '@/types/movies';
 import { useLocalStore } from '@/utils/hooks/useLocalStore';
@@ -16,6 +16,12 @@ const MovieStoreContext = createContext<MovieStore | null>(null);
 
 export const MovieStoreProvider: React.FC<ProviderProps> = ({ children, initData }) => {
   const moviesStore = useLocalStore(() => new MovieStore(initData));
+
+  useEffect(() => {
+    return () => {
+      moviesStore.store.destroy();
+    };
+  }, [moviesStore]);
 
   return (
     <MovieStoreContext.Provider value={moviesStore.store}>{children}</MovieStoreContext.Provider>

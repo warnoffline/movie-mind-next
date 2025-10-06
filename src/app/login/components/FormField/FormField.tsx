@@ -1,5 +1,3 @@
-'use client';
-
 import { Controller } from 'react-hook-form';
 
 import { Input } from '@/components/Input';

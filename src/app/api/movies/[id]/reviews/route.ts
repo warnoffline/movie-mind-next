@@ -1,5 +1,7 @@
 import { collection, getDocs, query, where, addDoc } from 'firebase/firestore';
 import { NextResponse } from 'next/server';
+import xss from 'xss';
+import { z } from 'zod';
 
 import { db } from '@/configs/firebase';
 import type { IMovieReview } from '@/types/movies';
@@ -7,6 +9,12 @@ import { mapReviewResponse } from '@/utils/mapReviewResponse';
 import { paginate } from '@/utils/paginate';
 
 import type { NextRequest } from 'next/server';
+
+const ReviewSchema = z.object({
+  author: z.string().min(1).max(100),
+  content: z.string().min(1).max(2000),
+  rating: z.number().min(1).max(5).optional(),
+});
 
 type ReviewBody = {
   author: string;
@@ -60,11 +68,16 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   }
 
   try {
+    const parsed = ReviewSchema.parse(body);
+
+    const cleanContent = xss(parsed.content);
+    const cleanAuthor = xss(parsed.author);
+
     const review = {
       movieId: id,
-      author: body.author,
-      content: body.content,
-      rating: body.rating ?? null,
+      author: cleanAuthor,
+      content: cleanContent,
+      rating: parsed.rating ?? null,
       createdAt: new Date().toISOString(),
     };
     const reviewsRef = collection(db, 'reviews');

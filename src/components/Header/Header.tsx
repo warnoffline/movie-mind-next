@@ -98,7 +98,7 @@ const Header = observer(() => {
               <Link
                 key={link.path}
                 href={link.path}
-                className={isActive ? s.activeLink : undefined}
+                className={cn(s.links, isActive && s.activeLink)}
                 onClick={() => setIsMenuOpen(false)}
               >
                 {link.path === '/login' && loadingStage.isLoading ? (

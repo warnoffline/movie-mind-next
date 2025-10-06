@@ -1,6 +1,7 @@
 'use client';
 
 import cn from 'classnames';
+import { motion, AnimatePresence } from 'framer-motion';
 import { observer } from 'mobx-react-lite';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -20,7 +21,6 @@ type SearchSuggestionsProps = {
 const SearchSuggestions: React.FC<SearchSuggestionsProps> = observer(
   ({ onClick, highlightedIndex = -2 }) => {
     const { filteredMovies, loadingStage } = useSearchStore();
-
     const router = useRouter();
 
     const handleClick = useCallback(
@@ -31,35 +31,54 @@ const SearchSuggestions: React.FC<SearchSuggestionsProps> = observer(
       [router, onClick]
     );
 
-    if (loadingStage.isLoading) {
-      return <SearchSkeletons />;
-    }
-
-    if (filteredMovies.length === 0) {
-      return (
-        <div className={s.list}>
-          <Text color="secondary" className={s.empty}>
-            Фильмы не найдены
-          </Text>
-        </div>
-      );
-    }
+    if (loadingStage.isLoading) return <SearchSkeletons />;
 
     return (
-      <div className={s.list}>
-        {filteredMovies.map((m, idx) => (
-          <div
-            key={m.id}
-            className={cn(s.item, { [s.highlighted]: idx === highlightedIndex })}
-            onClick={() => handleClick(m.id)}
+      <AnimatePresence>
+        {filteredMovies.length > 0 ? (
+          <motion.div
+            className={s.list}
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
           >
-            <Image width={40} height={60} src={m.posterUrl} alt={m.title} className={s.poster} />
-            <Text weight="bold" className={s.title}>
-              {m.title}
+            {filteredMovies.map((m, idx) => (
+              <motion.div
+                key={m.id}
+                className={cn(s.item, { [s.highlighted]: idx === highlightedIndex })}
+                onClick={() => handleClick(m.id)}
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.05, duration: 0.2 }}
+              >
+                <Image
+                  width={40}
+                  height={60}
+                  src={m.posterUrl}
+                  alt={m.title}
+                  className={s.poster}
+                />
+                <Text weight="bold" className={s.title}>
+                  {m.title}
+                </Text>
+              </motion.div>
+            ))}
+          </motion.div>
+        ) : (
+          <motion.div
+            className={s.list}
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.25 }}
+          >
+            <Text color="secondary" className={s.empty}>
+              Фильмы не найдены
             </Text>
-          </div>
-        ))}
-      </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     );
   }
 );

@@ -50,7 +50,7 @@ export const GENRE_IMAGES_MAP: Record<Genre, string> = {
   [Genre.melodrama]:
     'https://avatars.mds.yandex.net/get-ott/1534341/2a00000184387ced83a0309d9dbd841184f9/720x360',
   [Genre.crime]:
-    'https://avatars.mds.yandex.net/get-ott/1534341/2a000001843847ce092f99de54ec03f9908f/720x360',
+    'https://avatars.mds.yandex.net/get-ott/374297/2a000001843888a15f3b7d0e8712c608e238/720x360',
   [Genre.history]:
     'https://avatars.mds.yandex.net/get-ott/1534341/2a0000018438825ae96489247215e47b9304/720x360',
   [Genre.adventure]:

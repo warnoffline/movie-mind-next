@@ -1,14 +1,15 @@
-import { action, computed, makeObservable, reaction, runInAction } from 'mobx';
+import { action, computed, makeObservable, reaction } from 'mobx';
 
 import { MoviesService } from '@/services/movies';
 import { ReviewsService } from '@/services/reviews';
 import { LoadingStageModel } from '@/store/models/LoadingStageModel';
+import { LocalStore } from '@/store/models/LocalStore';
 import { PaginationModel } from '@/store/models/PaginationModel';
 import { ValueModel } from '@/store/models/ValueModel';
 import type { IMovie, IMovieReview, IMovieShort } from '@/types/movies';
 import type { ILocalStore } from '@/types/store';
 
-export class MovieStore implements ILocalStore {
+export class MovieStore extends LocalStore implements ILocalStore {
   private readonly _movie = new ValueModel<IMovie | null>(null);
   private readonly _similarMovies = new ValueModel<IMovieShort[]>([]);
   private readonly _reviews = new ValueModel<IMovieReview[]>([]);
@@ -22,6 +23,7 @@ export class MovieStore implements ILocalStore {
   readonly pagination = new PaginationModel(5);
 
   constructor(initData: IMovie) {
+    super();
     this._movie.change(initData);
 
     makeObservable(this, {
@@ -36,12 +38,14 @@ export class MovieStore implements ILocalStore {
 
     this._initFromServer();
 
-    reaction(
+    const pageReaction = reaction(
       () => this.page,
       () => {
         this._loadReviews();
       }
     );
+
+    this.addReaction(pageReaction);
   }
 
   get page() {
@@ -92,11 +96,10 @@ export class MovieStore implements ILocalStore {
 
     try {
       const fetchedReviews = await this._reviewsService.getReviews(movie.id, this.page);
-      runInAction(() => {
-        this._reviews.change(fetchedReviews.reviews);
-        this.pagination.setTotalCounts(fetchedReviews.totalCounts);
-        this.reviewsLoadingStage.success();
-      });
+
+      this._reviews.change(fetchedReviews.reviews);
+      this.pagination.setTotalCounts(fetchedReviews.totalCounts);
+      this.reviewsLoadingStage.success();
     } catch {
       this.reviewsLoadingStage.error();
     }
@@ -117,23 +120,19 @@ export class MovieStore implements ILocalStore {
         this._reviewsService.getReviews(movie.id),
       ]);
 
-      runInAction(() => {
-        this._similarMovies.change(similarResponse.movies.filter((m) => m.id !== Number(movie.id)));
-        this.similarLoadingStage.success();
+      this._similarMovies.change(similarResponse.movies.filter((m) => m.id !== Number(movie.id)));
+      this.similarLoadingStage.success();
 
-        this.pagination.setTotalCounts(reviewsResponse.totalCounts);
-        this._reviews.change(reviewsResponse.reviews);
-        this.reviewsLoadingStage.success();
-      });
+      this.pagination.setTotalCounts(reviewsResponse.totalCounts);
+      this._reviews.change(reviewsResponse.reviews);
+      this.reviewsLoadingStage.success();
     } catch {
-      runInAction(() => {
-        this.similarLoadingStage.error();
-        this.reviewsLoadingStage.error();
-      });
+      this.similarLoadingStage.error();
+      this.reviewsLoadingStage.error();
     }
   }
 
   destroy(): void {
-    // this.disposeReaction();
+    this.destroyReactions();
   }
 }

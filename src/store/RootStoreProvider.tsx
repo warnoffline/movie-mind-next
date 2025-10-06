@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { useCreateRootStore } from '@/utils/hooks/useCreateRootStore';
 
@@ -12,6 +12,12 @@ type RootStoreProviderProps = {
 
 export const RootStoreProvider: React.FC<RootStoreProviderProps> = ({ children }) => {
   const store = useCreateRootStore();
+
+  useEffect(() => {
+    return () => {
+      store.destroy();
+    };
+  }, [store]);
 
   return <RootStoreContext.Provider value={store}>{children}</RootStoreContext.Provider>;
 };

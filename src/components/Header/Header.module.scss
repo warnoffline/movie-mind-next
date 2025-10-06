@@ -23,11 +23,31 @@
       text-decoration: none;
       color: $text-accent;
       font-weight: 500;
+      transition: color 0.3s ease;
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0%;
+        height: 2px;
+        background-color: $text-primary;
+        transition: width 0.3s ease;
+      }
+
+      &:hover {
+        color: $text-primary;
+
+        &::after {
+          width: 100%;
+        }
+      }
     }
 
     .activeLink {
       color: $text-primary;
-      text-decoration: underline;
     }
   }
 

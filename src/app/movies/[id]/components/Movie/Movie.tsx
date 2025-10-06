@@ -16,13 +16,15 @@ import { GoBackButton } from '../GoBackButton';
 import { MovieInfo } from '../MovieInfo';
 import { ReviewSection } from './components/ReviewSection/ReviewSection';
 import { SimilarMovies } from './components/SimilarMovies/SimilarMovies';
+import { ReviewStoreProvider } from './model';
 import s from './Movie.module.scss';
+import LoadingPage from '../../loading';
 
 const Movie = observer(() => {
   const router = useRouter();
   const { loadingStage, movie } = useMovieStore();
 
-  if (loadingStage.isLoading) return <Loading />;
+  if (loadingStage.isLoading) return <LoadingPage />;
 
   if (!movie)
     return (
@@ -37,7 +39,7 @@ const Movie = observer(() => {
     );
 
   return (
-    <>
+    <ReviewStoreProvider movieId={movie.id}>
       <motion.div
         className={s.movie}
         initial="hidden"
@@ -78,7 +80,7 @@ const Movie = observer(() => {
       <ReviewSection />
 
       <SimilarMovies />
-    </>
+    </ReviewStoreProvider>
   );
 });
 

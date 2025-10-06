@@ -52,6 +52,7 @@ export type IMovie = {
   top250: number | null;
   type: string;
   typeNumber: number;
+  vector: number[];
   votes: {
     await: null | number;
     filmCritics: number;

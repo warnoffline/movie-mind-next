@@ -7,7 +7,7 @@ import {
   type User as FirebaseUser,
   type AuthProvider,
 } from 'firebase/auth';
-import { action, computed, makeObservable, runInAction } from 'mobx';
+import { action, computed, makeObservable } from 'mobx';
 
 import { auth, googleProvider, githubProvider } from '@/configs/firebase';
 
@@ -28,6 +28,7 @@ export class UserStore {
     makeObservable(this, {
       user: computed,
       isAuthorized: computed,
+      setUser: action.bound,
       loginWithEmail: action.bound,
       registerWithEmail: action.bound,
       loginWithGoogle: action.bound,
@@ -46,7 +47,7 @@ export class UserStore {
     return !!this.user;
   }
 
-  private setUser(user: FirebaseUser | null) {
+  setUser(user: FirebaseUser | null) {
     this._user.change(user);
   }
 
@@ -54,10 +55,8 @@ export class UserStore {
     this.loadingStage.loading();
 
     onAuthStateChanged(auth, (user) => {
-      runInAction(() => {
-        this.setUser(user);
-        this.loadingStage.success();
-      });
+      this.setUser(user);
+      this.loadingStage.success();
     });
   }
 

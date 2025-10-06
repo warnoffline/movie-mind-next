@@ -1,14 +1,15 @@
-import { action, computed, makeObservable, runInAction } from 'mobx';
+import { action, computed, makeObservable } from 'mobx';
 
 import { MoviesService } from '@/services/movies';
 import { LoadingStageModel } from '@/store/models/LoadingStageModel';
+import { LocalStore } from '@/store/models/LocalStore';
 import { ValueModel } from '@/store/models/ValueModel';
 import type { IMovieShort } from '@/types/movies';
 import type { ILocalStore } from '@/types/store';
 
 import type { SearchQueryFilters, SearchSetFilters } from './types';
 
-export class SearchStore implements ILocalStore {
+export class SearchStore extends LocalStore implements ILocalStore {
   private readonly _query = new ValueModel<string>('');
   private readonly _filteredMovies = new ValueModel<IMovieShort[]>([]);
   readonly loadingStage = new LoadingStageModel();
@@ -18,6 +19,8 @@ export class SearchStore implements ILocalStore {
   private readonly _service = new MoviesService();
 
   constructor(queryFilters: SearchQueryFilters, setQueryFilters: SearchSetFilters) {
+    super();
+
     makeObservable(this, {
       query: computed,
       filteredMovies: computed,
@@ -67,16 +70,14 @@ export class SearchStore implements ILocalStore {
     try {
       const results = await this._service.searchMoviesByTitle(this.query);
 
-      runInAction(() => {
-        this._filteredMovies.change(results);
-        this.loadingStage.success();
-      });
+      this._filteredMovies.change(results);
+      this.loadingStage.success();
     } catch {
-      runInAction(() => this.loadingStage.error());
+      this.loadingStage.error();
     }
   }
 
   destroy(): void {
-    // no
+    this.destroyReactions();
   }
 }

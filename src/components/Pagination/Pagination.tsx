@@ -1,9 +1,9 @@
-'use client';
-
+import { motion } from 'framer-motion';
 import React from 'react';
 
 import { Button } from '../Button';
 import { Text } from '../Text';
+import { containerVariants, itemVariants } from './config';
 import s from './Pagination.module.scss';
 
 type PaginationProps = {
@@ -13,8 +13,13 @@ type PaginationProps = {
 };
 
 const Pagination: React.FC<PaginationProps> = ({ page, totalPages, onChange }) => (
-  <div className={s.pagination__wrapper}>
-    <div className={s.pagination}>
+  <motion.div
+    variants={containerVariants}
+    initial="hidden"
+    animate="visible"
+    className={s.pagination__wrapper}
+  >
+    <motion.div variants={itemVariants} className={s.pagination}>
       <Button onClick={() => onChange(Math.max(1, page - 1))} disabled={page === 1}>
         <Text view="p-18">Назад</Text>
       </Button>
@@ -27,8 +32,8 @@ const Pagination: React.FC<PaginationProps> = ({ page, totalPages, onChange }) =
       >
         <Text view="p-18">Вперед</Text>
       </Button>
-    </div>
-  </div>
+    </motion.div>
+  </motion.div>
 );
 
 export default React.memo(Pagination);

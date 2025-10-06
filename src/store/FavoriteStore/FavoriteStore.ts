@@ -1,20 +1,26 @@
-import { action, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, reaction } from 'mobx';
 
 import { FavoritesService } from '@/services/favorites';
 
 import { LoadingStageModel } from '../models/LoadingStageModel';
+import { LocalStore } from '../models/LocalStore';
 
 import type { UserStore } from '../UserStore';
+import type { IReactionDisposer } from 'mobx';
 
 const FAVORITES_KEY = 'favorites';
 
-export class FavoritesStore {
+export class FavoritesStore extends LocalStore {
   favorites: number[] = [];
   readonly loadingStage = new LoadingStageModel();
   private _userStore: UserStore;
   private _service?: FavoritesService;
 
+  private _userReactionDisposer?: IReactionDisposer;
+
   constructor(userStore: UserStore) {
+    super();
+
     this._userStore = userStore;
 
     makeObservable(this, {
@@ -22,16 +28,15 @@ export class FavoritesStore {
       addFavorite: action.bound,
       removeFavorite: action.bound,
       toggleFavorite: action.bound,
+      loadFromLocalOnLogout: action.bound,
       isFavorite: computed,
     });
 
     if (typeof window !== 'undefined' && !this._userStore.user) {
-      runInAction(() => {
-        this.favorites = this._loadFromLocalStorage();
-      });
+      this.favorites = this._loadFromLocalStorage();
     }
 
-    reaction(
+    const disposer = reaction(
       () => this._userStore.user,
       (user, prevUser) => {
         if (user && !prevUser) {
@@ -39,10 +44,12 @@ export class FavoritesStore {
           this.loadForUser();
         } else if (!user && prevUser) {
           this._service = undefined;
-          this._loadFromLocalOnLogout();
+          this.loadFromLocalOnLogout();
         }
       }
     );
+
+    this.addReaction(disposer);
   }
 
   get isFavorite() {
@@ -57,9 +64,7 @@ export class FavoritesStore {
       const serverFavs = await this._service.get();
       const merged = Array.from(new Set([...localFavs, ...serverFavs]));
 
-      runInAction(() => {
-        this.favorites = merged;
-      });
+      this.favorites = merged;
 
       await this._service.set(merged);
       localStorage.removeItem(FAVORITES_KEY);
@@ -97,6 +102,10 @@ export class FavoritesStore {
     }
   }
 
+  loadFromLocalOnLogout() {
+    this.favorites = this._loadFromLocalStorage();
+  }
+
   private _saveToLocalStorage() {
     localStorage.setItem(FAVORITES_KEY, JSON.stringify(this.favorites));
   }
@@ -105,11 +114,5 @@ export class FavoritesStore {
     if (typeof window === 'undefined') return [];
     const saved = localStorage.getItem(FAVORITES_KEY);
     return saved ? JSON.parse(saved) : [];
-  }
-
-  private _loadFromLocalOnLogout() {
-    runInAction(() => {
-      this.favorites = this._loadFromLocalStorage();
-    });
   }
 }

@@ -1,5 +1,3 @@
-'use client';
-
 import ArrowDownIcon from '@/components/icons/ArrowDownIcon';
 import { Text } from '@/components/Text';
 
