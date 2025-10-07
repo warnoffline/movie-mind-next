@@ -37,21 +37,21 @@ const Header = observer(() => {
   const { highlightedIndex, handleKeyDown, setHighlightedIndex } = useSuggestionNavigation({
     items: filteredMovies,
     onSelect: (movie) => {
-      handleClear();
       router.push(`/movies/${movie.id}`);
+      handleClear();
     },
   });
-
-  const handleClear = () => {
-    setIsFocused(false);
-    setInputValue('');
-    inputRef.current?.blur();
-    setIsMenuOpen(false);
-  };
 
   useEffect(() => {
     setQuery(debouncedQuery);
   }, [debouncedQuery, setQuery]);
+
+  const handleClear = () => {
+    setIsFocused(false);
+    inputRef.current?.blur();
+    setIsMenuOpen(false);
+    setHighlightedIndex(-1);
+  };
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
@@ -88,14 +88,19 @@ const Header = observer(() => {
               setHighlightedIndex(-1);
             }}
             onFocus={() => setIsFocused(true)}
-            onBlur={() => setTimeout(() => setIsFocused(false), 200)}
+            onBlur={() =>
+              setTimeout(() => {
+                setIsFocused(false);
+                setHighlightedIndex(-1);
+              }, 200)
+            }
             onKeyDown={handleKeyDown}
           />
           {isFocused && (
             <SearchSuggestions
               onClick={(movie) => {
-                handleClear();
                 router.push(`/movies/${movie.id}`);
+                handleClear();
               }}
               highlightedIndex={highlightedIndex}
               movies={filteredMovies}

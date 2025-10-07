@@ -30,14 +30,17 @@ const SearchSuggestions: React.FC<SearchSuggestionsProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const isMouseOver = useRef(false);
 
   useEffect(() => {
-    const current = itemRefs.current[highlightedIndex];
-    if (current && containerRef.current) {
-      current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest',
-      });
+    if (!isMouseOver.current) {
+      const current = itemRefs.current[highlightedIndex];
+      if (current && containerRef.current) {
+        current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+        });
+      }
     }
   }, [highlightedIndex]);
 
@@ -48,6 +51,8 @@ const SearchSuggestions: React.FC<SearchSuggestionsProps> = ({
       {movies.length > 0 ? (
         <motion.div
           ref={containerRef}
+          onMouseEnter={() => (isMouseOver.current = true)}
+          onMouseLeave={() => (isMouseOver.current = false)}
           className={s.list}
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
