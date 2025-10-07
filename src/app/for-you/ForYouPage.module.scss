@@ -1,0 +1,111 @@
+@use '@/styles' as *;
+
+.rec {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 40px;
+  padding-top: 40px;
+
+  &__container {
+    width: 90%;
+    padding: 40px;
+    border-radius: 16px;
+    background: $bg-header;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  &__header {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  @include respond(tablet) {
+    gap: 20px;
+    padding-top: 20px;
+
+    &__container {
+      width: 85%;
+      padding: 20px;
+      border-radius: 12px;
+      gap: 20px;
+    }
+
+    &__header {
+      width: 100%;
+      text-align: center;
+    }
+  }
+}
+
+.favorites {
+  &__header {
+    display: flex;
+    justify-content: space-between;
+
+    @include respond(mobile) {
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    &__items {
+      display: flex;
+      gap: 20px;
+
+      @include respond(mobile) {
+        align-self: flex-end;
+      }
+    }
+
+    &__button {
+      border-radius: 12px;
+      padding: 10px 20px;
+      font-size: 16px;
+
+      @include respond(tablet) {
+        font-size: 14px;
+        padding: 5px 10px;
+      }
+    }
+  }
+
+  &__content {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  &__button {
+    border-radius: 8px;
+    padding: 5px 15px;
+    font-size: 14px;
+    font-weight: bold;
+  }
+}
+
+.top {
+  width: 95%;
+  padding: 40px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  @include respond(desktop) {
+    padding: 40px 0;
+  }
+
+  @include respond(tablet) {
+    padding: 40px 0;
+  }
+}
+
+.searchWrapper {
+  position: relative;
+}

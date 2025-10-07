@@ -12,9 +12,9 @@ export const MovieListSkeletons = () => {
           <div className={s.skeleton__content}>
             <Skeleton width={100} height={20} />
             <div className={s.skeleton__description}>
-              <Skeleton width={340} height={20} />
-              <Skeleton width={340} height={20} />
-              <Skeleton width={340} height={20} />
+              <Skeleton className={s.skeleton__item} />
+              <Skeleton className={s.skeleton__item} />
+              <Skeleton className={s.skeleton__item} />
             </div>
           </div>
         </div>

@@ -29,7 +29,7 @@
       &::after {
         content: '';
         position: absolute;
-        bottom: -2px;
+        bottom: -3px;
         left: 0;
         width: 0%;
         height: 2px;
@@ -61,6 +61,11 @@
   align-items: center;
   gap: 50px;
 
+  @include respond(desktop) {
+    display: none;
+    gap: 10px;
+  }
+
   @include respond(tablet) {
     display: none;
     gap: 10px;
@@ -75,7 +80,7 @@
     display: flex;
     flex-direction: column-reverse;
     position: absolute;
-    top: calc($vh-6 - 5px);
+    top: $vh-6;
     z-index: 100;
     left: 0;
     right: 0;
@@ -94,6 +99,10 @@
     line-height: 0;
     border-radius: 50%;
     padding: 6px;
+  }
+
+  @include respond(desktop) {
+    display: block;
   }
 
   @include respond(tablet) {

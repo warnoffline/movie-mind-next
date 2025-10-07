@@ -31,6 +31,15 @@
   gap: 10px;
   padding-top: 10px;
 
+  &__item {
+    width: 340px;
+    height: 20px;
+
+    @include respond(mobile) {
+      width: 290px;
+    }
+  }
+
   @include respond(mobile) {
     width: 320px;
   }

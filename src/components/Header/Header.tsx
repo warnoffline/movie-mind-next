@@ -11,18 +11,18 @@ import { useDebounce } from '@/utils/hooks/useDebounce';
 import { useSuggestionNavigation } from '@/utils/hooks/useSuggestionNavigation';
 
 import s from './Header.module.scss';
-import { Input } from '../Input';
-import { Text } from '../Text';
-import { SearchSuggestions } from './components';
 import { Button } from '../Button';
 import { defaultLinks, type HeaderLink } from './config';
 import { SearchStoreProvider, useSearchStore } from './model';
 import { BurgerIcon } from '../icons/BurgerIcon';
 import { CloseIcon } from '../icons/CloseIcon';
+import { Input } from '../Input';
+import { SearchSuggestions } from '../SearchSuggestions';
 import { Skeleton } from '../Skeleton';
+import { Text } from '../Text';
 
 const Header = observer(() => {
-  const { query, setQuery, filteredMovies } = useSearchStore();
+  const { query, setQuery, filteredMovies, loadingStage: searchLoadingStage } = useSearchStore();
   const { isAuthorized, user, loadingStage } = useUserStore();
   const [isFocused, setIsFocused] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -33,7 +33,7 @@ const Header = observer(() => {
 
   const debouncedQuery = useDebounce(inputValue, 300);
 
-  const { highlightedIndex, handleKeyDown, reset } = useSuggestionNavigation({
+  const { highlightedIndex, handleKeyDown } = useSuggestionNavigation({
     items: filteredMovies,
     onSelect: (movie) => {
       handleClear();
@@ -43,9 +43,9 @@ const Header = observer(() => {
 
   const handleClear = () => {
     setIsFocused(false);
+    setInputValue('');
     inputRef.current?.blur();
     setIsMenuOpen(false);
-    reset();
   };
 
   useEffect(() => {
@@ -88,7 +88,15 @@ const Header = observer(() => {
             onKeyDown={handleKeyDown}
           />
           {isFocused && (
-            <SearchSuggestions onClick={handleClear} highlightedIndex={highlightedIndex} />
+            <SearchSuggestions
+              onClick={(movie) => {
+                handleClear();
+                router.push(`/movies/${movie.id}`);
+              }}
+              highlightedIndex={highlightedIndex}
+              movies={filteredMovies}
+              loading={searchLoadingStage.isLoading}
+            />
           )}
         </div>
         <nav className={s.header__nav}>

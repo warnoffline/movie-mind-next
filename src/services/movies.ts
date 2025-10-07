@@ -48,4 +48,15 @@ export class MoviesService {
     if (!res.ok) throw new Error('Failed to search movies');
     return res.json();
   }
+
+  async findSimilar(movieIds: string[]): Promise<IMovieShort[]> {
+    const res = await fetch(`${BASE_URL}/movies/similar`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ movieIds }),
+      cache: 'no-store',
+    });
+    if (!res.ok) throw new Error('Failed to search similar movies');
+    return res.json();
+  }
 }
