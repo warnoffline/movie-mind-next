@@ -25,5 +25,5 @@ export function useSuggestionNavigation<T>({ items, onSelect }: UseSuggestionNav
 
   const reset = () => setHighlightedIndex(-1);
 
-  return { highlightedIndex, handleKeyDown, reset };
+  return { highlightedIndex, handleKeyDown, setHighlightedIndex, reset };
 }

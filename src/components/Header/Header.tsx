@@ -33,7 +33,7 @@ const Header = observer(() => {
 
   const debouncedQuery = useDebounce(inputValue, 300);
 
-  const { highlightedIndex, handleKeyDown } = useSuggestionNavigation({
+  const { highlightedIndex, handleKeyDown, setHighlightedIndex } = useSuggestionNavigation({
     items: filteredMovies,
     onSelect: (movie) => {
       handleClear();
@@ -82,7 +82,10 @@ const Header = observer(() => {
             ref={inputRef}
             placeholder="Поиск фильмов"
             value={inputValue}
-            onChange={setInputValue}
+            onChange={(value) => {
+              setInputValue(value);
+              setHighlightedIndex(-1);
+            }}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setTimeout(() => setIsFocused(false), 200)}
             onKeyDown={handleKeyDown}
@@ -96,6 +99,7 @@ const Header = observer(() => {
               highlightedIndex={highlightedIndex}
               movies={filteredMovies}
               loading={searchLoadingStage.isLoading}
+              onHighlightChange={setHighlightedIndex}
             />
           )}
         </div>

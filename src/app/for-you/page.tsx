@@ -39,7 +39,7 @@ const ForYouPage = observer(() => {
   const inputRef = useRef<HTMLInputElement>(null);
   const debouncedQuery = useDebounce(inputValue, 300);
 
-  const { highlightedIndex, handleKeyDown } = useSuggestionNavigation({
+  const { highlightedIndex, handleKeyDown, setHighlightedIndex } = useSuggestionNavigation({
     items: searchResults,
     onSelect: (movie) => {
       handleClear();
@@ -91,7 +91,10 @@ const ForYouPage = observer(() => {
             ref={inputRef}
             placeholder="Введите любимый фильм"
             value={inputValue}
-            onChange={setInputValue}
+            onChange={(value) => {
+              setInputValue(value);
+              setHighlightedIndex(-1);
+            }}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setTimeout(() => setIsFocused(false), 200)}
             onKeyDown={handleKeyDown}
@@ -106,6 +109,7 @@ const ForYouPage = observer(() => {
               movies={searchResults}
               loading={loadingStage.isLoading}
               selected={favorites.map((i) => i.id)}
+              onHighlightChange={setHighlightedIndex}
             />
           )}
         </div>
