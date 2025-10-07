@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { Suspense } from 'react';
 
 import { Button } from '@/components/Button';
-import { Loading } from '@/components/Loading';
+import { LoadingFull } from '@/components/LoadingFull';
 import { Text } from '@/components/Text';
 
 import { containerVariants, itemVariants } from './config';
@@ -86,7 +86,7 @@ const Movie = observer(() => {
 
 export default function MovieWrapper() {
   return (
-    <Suspense fallback={<Loading />}>
+    <Suspense fallback={<LoadingFull />}>
       <Movie />
     </Suspense>
   );

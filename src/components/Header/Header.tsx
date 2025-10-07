@@ -17,6 +17,7 @@ import { SearchStoreProvider, useSearchStore } from './model';
 import { BurgerIcon } from '../icons/BurgerIcon';
 import { CloseIcon } from '../icons/CloseIcon';
 import { Input } from '../Input';
+import { LoadingFull } from '../LoadingFull';
 import { SearchSuggestions } from '../SearchSuggestions';
 import { Skeleton } from '../Skeleton';
 import { Text } from '../Text';
@@ -129,7 +130,7 @@ const Header = observer(() => {
 
 export default function HeaderWrapper() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingFull />}>
       <SearchStoreProvider>
         <Header />
       </SearchStoreProvider>

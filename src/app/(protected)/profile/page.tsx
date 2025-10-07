@@ -8,6 +8,7 @@ import { Suspense, useCallback } from 'react';
 
 import { Button } from '@/components/Button';
 import { PersonIcon } from '@/components/icons/PersonIcon';
+import { LoadingFull } from '@/components/LoadingFull';
 import { Text } from '@/components/Text';
 import { useUserStore } from '@/store';
 
@@ -77,7 +78,7 @@ const Profile = observer(() => {
 
 export default function ProfilePage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingFull />}>
       <Profile />
     </Suspense>
   );

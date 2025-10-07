@@ -11,6 +11,7 @@ import s from './MovieList.module.scss';
 import { FavoriteButton } from '../FavoriteButton';
 import { GenreTags } from '../GenreTags';
 import { containerVariants, itemVariants } from './config';
+import { LoadingFull } from '../LoadingFull';
 
 type MovieListProps = {
   movies: IMovieShort[];
@@ -48,7 +49,7 @@ const MovieList: React.FC<MovieListProps> = ({ movies }) => {
 
 export default function MovieListWrapper(props: MovieListProps) {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingFull />}>
       <MovieList {...props} />
     </Suspense>
   );
