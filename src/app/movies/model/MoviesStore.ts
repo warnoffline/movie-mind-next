@@ -1,4 +1,4 @@
-import { makeObservable, action, computed } from 'mobx';
+import { makeObservable, action, computed, reaction } from 'mobx';
 
 import { MoviesService } from '@/services/movies';
 import { LoadingStageModel } from '@/store/models/LoadingStageModel';
@@ -41,6 +41,16 @@ export class MoviesStore extends LocalStore implements ILocalStore {
     });
 
     this.initFromQuery(true, initData);
+
+    this.addReaction(
+      reaction(
+        () => [this._queryFilters.page, this._queryFilters.category],
+        () => {
+          this.initFromQuery(false);
+        },
+        { fireImmediately: true }
+      )
+    );
   }
 
   get selectedCategory() {

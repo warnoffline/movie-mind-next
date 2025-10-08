@@ -66,7 +66,7 @@ const Header = observer(() => {
   return (
     <header className={s.header}>
       <div className={s.logo}>
-        <Link href="/movies">
+        <Link href="/movies?page=1">
           <Text view="p-20" weight="bold" color="primary">
             Movie Mind
           </Text>
@@ -112,6 +112,7 @@ const Header = observer(() => {
         <nav className={s.header__nav}>
           {links.map((link) => {
             const isActive = pathname === link.path;
+
             return (
               <Link
                 key={link.path}
