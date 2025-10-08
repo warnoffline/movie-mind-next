@@ -1,0 +1,77 @@
+@use '@/styles' as *;
+
+.list {
+  position: absolute;
+  width: 100%;
+  background: $bg-hover;
+  border: 1px solid $bg;
+  border-radius: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 10;
+  padding: 0;
+  margin: 4px 0 0 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background: $bg-header;
+  }
+}
+
+.highlighted {
+  background: $bg-header;
+}
+
+.selected {
+  background: $text-accent;
+}
+
+.poster {
+  width: 40px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.title {
+  font-size: 14px;
+  color: $text-primary;
+}
+
+.loading {
+  text-align: center;
+  padding: 10px 0;
+}
+
+.empty {
+  padding: 10px 0;
+  text-align: center;
+}
+
+.skeleton {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.skeletonPoster {
+  width: 40px;
+  height: 60px;
+  border-radius: 4px;
+  background: $bg-header;
+}
+
+.skeletonTitle {
+  width: 120px;
+  height: 16px;
+  border-radius: 4px;
+  background: $bg-header;
+}

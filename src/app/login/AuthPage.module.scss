@@ -1,0 +1,45 @@
+@use '@/styles' as *;
+
+.auth_page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 0;
+
+  &__content {
+    width: 40%;
+    padding: 40px;
+    border-radius: 16px;
+    background-color: $bg-header;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+    @include respond(tablet) {
+      width: 80%;
+    }
+
+    @include respond(mobile) {
+      width: 80%;
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    gap: 10px;
+
+    button {
+      line-height: 0;
+      border-radius: 50%;
+      padding: 6px;
+    }
+  }
+
+  &__footer {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-end;
+  }
+}

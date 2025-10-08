@@ -1,0 +1,21 @@
+@use '@/styles' as *;
+
+.similar {
+  padding: 40px 0;
+
+  @include respond(tablet) {
+    padding: 30px 0;
+  }
+
+  @include respond(mobile) {
+    padding: 20px 0;
+  }
+
+  &__header {
+    padding: 20px 40px;
+
+    @include respond(tablet) {
+      padding: 16px 20px;
+    }
+  }
+}

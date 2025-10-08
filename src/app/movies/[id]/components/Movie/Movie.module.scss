@@ -1,0 +1,126 @@
+@use '@/styles' as *;
+
+.movie {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px;
+  position: relative;
+
+  @include respond(tablet) {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  @include respond(mobile) {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  &__header {
+    display: flex;
+    gap: 24px;
+    position: relative;
+
+    @include respond(tablet) {
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    @include respond(mobile) {
+      flex-direction: column;
+      gap: 12px;
+    }
+  }
+
+  &__poster {
+    position: relative;
+
+    @include respond(tablet) {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    &_img {
+      width: 300px;
+      height: fit-content;
+      border-radius: 16px;
+      object-fit: cover;
+
+      @include respond(tablet) {
+        width: 220px;
+      }
+
+      @include respond(mobile) {
+        width: 100%;
+      }
+    }
+
+    p {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background-color: $bg;
+      padding: 10px;
+      border-radius: 8px;
+
+      @include respond(tablet) {
+        position: static;
+        width: fit-content;
+        height: fit-content;
+        margin-left: 10px;
+      }
+
+      @include respond(mobile) {
+        position: absolute;
+        padding: 8px;
+      }
+    }
+  }
+
+  &__backdrop {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.5) blur(4px);
+    z-index: 0;
+  }
+
+  &__info {
+    width: 100%;
+  }
+}
+
+.button {
+  border-radius: 24px;
+  padding: 5px 10px;
+
+  p {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+
+    @include respond(mobile) {
+      font-size: 14px;
+      gap: 3px;
+    }
+  }
+}
+
+.empty {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: $vh-70;
+  flex-direction: column;
+  gap: 20px;
+
+  button {
+    padding: 10px 20px;
+    border-radius: 24px;
+  }
+}

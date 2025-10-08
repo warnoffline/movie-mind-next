@@ -1,0 +1,30 @@
+@use '@/styles' as *;
+
+.stars {
+  display: flex;
+  gap: 6px;
+}
+
+.star {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.readOnly {
+  cursor: default;
+}
+
+.icon {
+  width: 28px;
+  height: 28px;
+  transition: fill 0.25s ease, stroke 0.25s ease;
+  fill: transparent;
+  stroke: $star-default;
+}
+
+.activeIcon {
+  fill: $star-active;
+  stroke: $star-active;
+}

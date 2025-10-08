@@ -1,0 +1,58 @@
+@use '@/styles' as *;
+
+.title {
+  font-size: 32px;
+  font-weight: 700;
+
+  @include respond(mobile) {
+    font-size: 24px;
+  }
+}
+
+.button {
+  font-size: 18px;
+}
+
+.p-20 {
+  font-size: 20px;
+}
+
+.p-18 {
+  font-size: 18px;
+}
+
+.p-16 {
+  font-size: 16px;
+}
+
+.p-14 {
+  font-size: 14px;
+}
+
+.primary {
+  color: $text-primary;
+}
+
+.accent {
+  color: $text-accent;
+}
+
+.secondary {
+  color: $text-secondary;
+}
+
+.error {
+  color: $danger-color;
+}
+
+.normal {
+  font-weight: 400;
+}
+
+.medium {
+  font-weight: 500;
+}
+
+.bold {
+  font-weight: 700;
+}

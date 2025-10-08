@@ -1,0 +1,55 @@
+@use '@/styles' as *;
+
+.input {
+  &-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  &-icon {
+    position: absolute;
+    right: 12px;
+    top: 55%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  &-field {
+    min-width: 350px;
+    width: 100%;
+    border: 2px solid transparent;
+    border-radius: 24px;
+    background-color: $bg;
+    padding: 10px 15px;
+    color: $text-primary;
+    font-size: 16px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+
+    @include respond(mobile) {
+      min-width: 300px;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $bg-accent;
+    }
+
+    &:disabled {
+      background-color: $bg;
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    &[type='number']::-webkit-inner-spin-button,
+    &[type='number']::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    &[type='number'] {
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+  }
+}

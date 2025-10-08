@@ -1,0 +1,28 @@
+@use '@/styles' as *;
+
+.auth {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+
+  &__submit {
+    padding: 10px 20px;
+    border-radius: 24px;
+  }
+
+  &__toggle {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    span {
+      color: $text-accent;
+      cursor: pointer;
+
+      &:hover {
+        color: $text-accent-hover;
+      }
+    }
+  }
+}

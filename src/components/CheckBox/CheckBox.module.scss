@@ -1,0 +1,35 @@
+@use '@/styles' as *;
+
+.checkbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &-input {
+    position: absolute;
+    opacity: 0;
+  }
+
+  &-custom {
+    line-height: 10px;
+    width: 40px;
+    height: 40px;
+    background-color: #fff;
+    border: 1px solid #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .checkbox-input:hover + .checkbox-custom {
+    border-color: $bg-accent;
+    cursor: pointer;
+  }
+
+  .checkbox-input:disabled + .checkbox-custom {
+    background-color: #ffffff80;
+    border-color: #ffffff00;
+    cursor: not-allowed;
+  }
+}

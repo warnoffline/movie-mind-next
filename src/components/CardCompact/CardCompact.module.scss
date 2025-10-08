@@ -1,0 +1,63 @@
+@use '@/styles' as *;
+
+.card {
+  width: 240px;
+  min-height: 340px;
+  background-color: $bg-card;
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  transition: 0.2s;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+  @include respond(mobile) {
+    width: 170px;
+  }
+
+  &:hover {
+    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
+    transform: scale(1.02);
+    transition: 0.2s;
+  }
+
+  .imageWrapper {
+    width: 100%;
+    height: 220px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px 16px 0 0;
+
+    .bgBlur {
+      position: absolute;
+      bottom: 0;
+      width: 90%;
+      height: 95%;
+      background-size: cover;
+      background-position: center;
+      filter: blur(20px);
+      z-index: 0;
+    }
+
+    img {
+      object-fit: contain;
+      position: relative;
+      z-index: 1;
+    }
+  }
+
+  .body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 12px;
+    flex: 1;
+    gap: 8px;
+  }
+
+  .actionSlot {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: auto;
+  }
+}

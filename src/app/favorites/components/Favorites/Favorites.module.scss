@@ -1,0 +1,21 @@
+@use '@/styles' as *;
+
+.favorites {
+  padding: 20px;
+
+  &__header {
+    padding: 20px 30px;
+  }
+}
+
+.empty {
+  display: flex;
+  justify-content: center;
+  height: $vh-70;
+  align-items: center;
+
+  p {
+    width: 50%;
+    text-align: center;
+  }
+}

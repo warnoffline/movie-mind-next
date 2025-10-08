@@ -1,0 +1,1 @@
+export { MovieReviewsSkeleton } from './MovieReviewsSkeleton';

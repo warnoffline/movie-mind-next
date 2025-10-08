@@ -1,0 +1,13 @@
+@use '@/styles' as *;
+
+.empty {
+  display: flex;
+  justify-content: center;
+  height: $vh-70;
+  align-items: center;
+
+  p {
+    width: 50%;
+    text-align: center;
+  }
+}

@@ -1,0 +1,24 @@
+@use '@/styles' as *;
+
+.movies {
+  padding: 20px 20px;
+
+  &__article {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+  }
+}
+
+.empty {
+  display: flex;
+  justify-content: center;
+  height: $vh-70;
+  align-items: center;
+
+  p {
+    width: 50%;
+    text-align: center;
+  }
+}
